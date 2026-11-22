@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Calendário de Harptos em português: meses, dias, festivais e datas de Faerûn para campanhas de D&D.">
+  <meta name="theme-color" content="#17191f">
+  <title>Calendário de Harptos | Ferramentas de RPG</title>
+  <link rel="stylesheet" href="calendar-ptbr.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://bibliotecadofimdomundo.com/ferramentas"><span class="brand-mark">✦</span><span>BIBLIOTECA <b>DO FIM DO MUNDO</b></span></a>
+    <nav aria-label="Navegação principal"><a href="https://bibliotecadofimdomundo.com/ferramentas">Ferramentas</a><a href="calendar.html" aria-current="page">Calendário</a></nav>
+  </header>
+  <main class="shell">
+    <section class="intro">
+      <p class="eyebrow">FAERÛN · CONTAGEM DO TEMPO</p>
+      <h1>Calendário de <em>Harptos</em></h1>
+      <p>Consulte meses, dias e festivais do calendário mais usado em Faerûn. Cada mês tem três semanas de dez dias, chamadas tendays.</p>
+      <div class="controls">
+        <label for="month-select">Mês<select id="month-select"></select></label>
+        <label for="year-input">Ano DR<input id="year-input" type="number" min="1" value="1492" inputmode="numeric"></label>
+        <button id="today-button" type="button">Ver o mês</button>
+      </div>
+      <p class="year-note" id="year-note" aria-live="polite"></p>
+    </section>
+    <section id="calendar" class="calendar-card" aria-live="polite"></section>
+    <section class="year-strip" aria-label="Festivais entre os meses">
+      <div><p class="eyebrow">DIAS FORA DOS MESES</p><h2>As festas que marcam a passagem do ano</h2><p>Os cinco festivais ficam entre os meses. Em anos bissextos, Shieldmeet vem logo depois de Midsummer.</p></div>
+      <ol id="festival-list"></ol>
+    </section>
+    <details class="about"><summary>Como funciona o calendário de Harptos</summary><p>O ano comum tem 365 dias: doze meses de 30 dias e cinco festivais intercalados. A cada quatro anos há um dia adicional, Shieldmeet. Os nomes dos dias se repetem a cada dez dias; por isso, o calendário não usa semanas de sete dias.</p><p>Os signos mensais correspondem às constelações associadas a cada mês. Os festivais também têm signos próprios.</p></details>
+    <footer><p>Projeto adaptado de <a href="https://github.com/DungeonMasterTools/DungeonMasterTools.github.io">DungeonMasterTools</a>, sob licença MIT. Nomes e elementos de cenário de Forgotten Realms pertencem aos respectivos titulares. Material de fã, sem vínculo oficial.</p><details class="about"><summary>Aviso da licença MIT da base</summary><p>Copyright (c) 2017 DungeonMasterTools</p><p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p><p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p><p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</p></details><p><a href="https://bibliotecadofimdomundo.com/">Biblioteca do Fim do Mundo</a> · <a href="https://homebrewery.naturalcrit.com/user/reformagus">Reformagus no Homebrewery</a></p></footer>
+  </main>
+  <script>
+  (() => {
+    const months = [
+      {id:'Hammer',name:'Hammer',byname:'Profundoinverno',sign:'Texugo',season:'Inverno',after:'Midwinter'},
+      {id:'Alturiak',name:'Alturiak',byname:'A Garra do Inverno',sign:'Aranha',season:'Inverno'},
+      {id:'Ches',name:'Ches',byname:'A Garra dos Poentes',sign:'Serpente',season:'Primavera',events:{2:'Festival da Maré Alta · elfos do mar',19:'Equinócio da primavera',20:'Festival da Fundação · Menzoberranzan',30:'Frotas em Festa · Waterdeep'}},
+      {id:'Tarsakh',name:'Tarsakh',byname:'A Garra das Tempestades',sign:'Pantera',season:'Primavera',events:{4:'O Armamento · Vast'},after:'Greengrass'},
+      {id:'Mirtul',name:'Mirtul',byname:'O Degelo',sign:'Raposa',season:'Primavera',events:{6:'O Arado · Vast',19:'Festival de Handras · Suzail',26:'Banquete Aberto · Cormyr'}},
+      {id:'Kythorn',name:'Kythorn',byname:'Tempo das Flores',sign:'Mariposa',season:'Verão',events:{1:'Maré dos Trolls · Waterdeep',8:'Festival da Recordação · anões',14:'Hornmoot · Vast',20:'Solstício de verão'}},
+      {id:'Flamerule',name:'Flamerule',byname:'Verão Pleno',sign:'Salamandra',season:'Verão',events:{7:'Noite de Lliira · Waterdeep',14:'Hornmoot Menor · Vast'},after:'Midsummer'},
+      {id:'Eleasis',name:'Eleasis',byname:'Sol Alto',sign:'Coruja',season:'Verão',events:{1:'Dia de Ahghairon · Waterdeep',9:'Festival do Fogo Azul · Ormpetarr',14:'Hornmoot Menor · Vast'}},
+      {id:'Eleint',name:'Eleint',byname:'O Declínio',sign:'Águia',season:'Outono',events:{14:'Hornmoot Final · Vast',21:'Equinócio de outono'},after:'Highharvestide'},
+      {id:'Marpenoth',name:'Marpenoth',byname:'Queda das Folhas',sign:'Louva-a-deus',season:'Outono',events:{15:'Bênção de Auril · Waterdeep'}},
+      {id:'Uktar',name:'Uktar',byname:'O Apodrecimento',sign:'Falcão',season:'Outono',after:'Feast of the Moon'},
+      {id:'Nightal',name:'Nightal',byname:'O Recolhimento',sign:'Urso',season:'Inverno',events:{20:'Solstício de inverno'}}
+    ];
+    const festivals = [
+      ['Midwinter','Meio do Inverno','entre Hammer e Alturiak','Javali'],['Greengrass','Grama Verde','entre Tarsakh e Mirtul','Alce'],['Midsummer','Meio do Verão','entre Flamerule e Eleasis','Albatroz'],['Highharvestide','Festa da Colheita','entre Eleint e Marpenoth','Corvo'],['Feast of the Moon','Festa da Lua','entre Uktar e Nightal','Lobo']
+    ];
+    const weekdays=['Primeiro dia','Segundo dia','Terceiro dia','Quarto dia','Quinto dia','Sexto dia','Sétimo dia','Oitavo dia','Nono dia','Décimo dia'];
+    const select=document.querySelector('#month-select'), yearInput=document.querySelector('#year-input'), out=document.querySelector('#calendar');
+    months.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${String(i+1).padStart(2,'0')} · ${m.name}`;select.append(o)});
+    const festivalByMonth=Object.fromEntries(festivals.map(f=>[f[0],f]));
+    function render(){
+      const m=months[Number(select.value)||0], y=Math.max(1,Number.parseInt(yearInput.value,10)||1), leap=y%4===0;
+      yearInput.value=y; document.title=`${m.name} · Calendário de Harptos`;
+      document.querySelector('#year-note').textContent=`Ano ${y} DR · ${leap?'ano com Shieldmeet':'ano comum'} · ${m.season}`;
+      const cells=Array.from({length:30},(_,i)=>{const day=i+1, event=m.events?.[day];return `<div class="day ${event?'has-event':''}"${event?` title="${event.replaceAll('"','&quot;')}"`:''}><span class="date">${day}</span><span class="weekday">${weekdays[i%10]}</span>${event?`<span class="event">${event}</span>`:''}</div>`}).join('');
+      const next=months[(months.indexOf(m)+1)%12]; const fest=m.after?festivalByMonth[m.after]:null;
+      out.innerHTML=`<div class="month-heading" id="${m.id}"><div><p class="eyebrow">${m.season.toUpperCase()} · SIGNO DE ${m.sign.toUpperCase()}</p><h2>${m.name}</h2><p>${m.byname}</p></div><span class="month-count">30 <small>dias</small></span></div><div class="grid" role="grid" aria-label="${m.name}, ${y} DR">${weekdays.map(d=>`<div class="weekday-head" role="columnheader">${d.replace(' dia','')}</div>`).join('')}${cells}</div>${fest?`<aside class="festival"><span class="festival-star">✦</span><div><small>FESTIVAL INTERCALAR · DEPOIS DE ${m.name.toUpperCase()}</small><h3>${fest[1]}</h3><p>Também conhecido como ${fest[0]} · signo do ${fest[3]}${fest[0]==='Midsummer'&&leap?' · Shieldmeet ocorre neste ano, após Midsummer':''}</p></div><span class="festival-next">antes de ${next.name}</span></aside>`:''}`;
+      document.querySelectorAll('.month-link').forEach(a=>a.setAttribute('aria-current',Number(a.dataset.index)===Number(select.value)?'true':'false'));
+    }
+    select.addEventListener('change',render); document.querySelector('#today-button').addEventListener('click',render); yearInput.addEventListener('change',render);
+    document.querySelector('#festival-list').innerHTML=festivals.map(f=>`<li><b>${f[1]}</b><span>${f[0]} · ${f[2]}</span></li>`).join('');
+    const hash=location.hash.slice(1), initial=months.findIndex(m=>m.id.toLowerCase()===hash.toLowerCase()); select.value=initial>=0?initial:0; render();
+  })();
+  </script>
+</body>
+</html>
